@@ -25,7 +25,6 @@ steps:
 
 # Step 4: Setup SSH
 - name: 'gcr.io/cloud-builders/git'
-  id: Setup SSH
   secretEnv: ['SSH_KEY']
   entrypoint: 'bash'
   args:
@@ -38,9 +37,8 @@ steps:
     - name: ssh
       path: /root/.ssh
 
-# Step 5: Clone repo
+# Step 5: Clone repo (ARREGLADO)
 - name: 'gcr.io/cloud-builders/git'
-  id: Clone
   args:
     - clone
     - --recurse-submodules
@@ -51,10 +49,10 @@ steps:
 
 # Step 6: Checkout branch
 - name: 'gcr.io/cloud-builders/gcloud'
-  id: Checkout
+  id: Change directory
   entrypoint: /bin/sh
   args:
-    - -c
+    - '-c'
     - |
       cd hello-cloudbuild-env && \
       git checkout candidate && \
@@ -68,7 +66,7 @@ steps:
   id: Generate manifest
   entrypoint: /bin/sh
   args:
-    - -c
+    - '-c'
     - |
       sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" kubernetes.yaml.tpl | \
       sed "s/COMMIT_SHA/${SHORT_SHA}/g" > hello-cloudbuild-env/kubernetes.yaml
@@ -78,7 +76,7 @@ steps:
   id: Push manifest
   entrypoint: /bin/sh
   args:
-    - -c
+    - '-c'
     - |
       set -x && \
       cd hello-cloudbuild-env && \
